@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
+using LibraryManagementEFCore.Menus;
 
 namespace LibraryManagementEFCore.Menus;
 
@@ -9,13 +7,16 @@ public class MainMenu
 {
     private readonly BookMenu _bookMenu;
     private readonly MemberMenu _memberMenu;
+    private readonly LoanMenu _loanMenu;
 
     public MainMenu(
         BookMenu bookMenu,
-        MemberMenu memberMenu)
+        MemberMenu memberMenu,
+        LoanMenu loanMenu)
     {
         _bookMenu = bookMenu;
         _memberMenu = memberMenu;
+        _loanMenu = loanMenu;
     }
 
     public async Task RunAsync()
@@ -24,11 +25,10 @@ public class MainMenu
         {
             Console.Clear();
 
-            Console.WriteLine("================================");
-            Console.WriteLine("   LIBRARY MANAGEMENT SYSTEM");
-            Console.WriteLine("================================");
+            Console.WriteLine("===== LIBRARY MANAGEMENT SYSTEM =====");
             Console.WriteLine("1. Book Management");
             Console.WriteLine("2. Member Management");
+            Console.WriteLine("3. Loan Management");
             Console.WriteLine("0. Exit");
             Console.Write("Choose an option: ");
 
@@ -42,8 +42,11 @@ public class MainMenu
                     await _memberMenu.RunAsync();
                     break;
 
+                case "3":
+                    await _loanMenu.RunAsync();
+                    break;
+
                 case "0":
-                    Console.WriteLine("Exiting application...");
                     return;
 
                 default:

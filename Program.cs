@@ -18,18 +18,27 @@ internal class Program
 
         await using var db = new AppDbContext(options);
 
-        // Book management dependencies
         var bookRepository = new BookRepository(db);
         var bookService = new BookService(bookRepository);
         var bookMenu = new BookMenu(bookService);
 
-        // Member management dependencies
         var memberRepository = new MemberRepository(db);
         var memberService = new MemberService(memberRepository);
         var memberMenu = new MemberMenu(memberService);
 
-        // Application main menu
-        var mainMenu = new MainMenu(bookMenu, memberMenu);
+        var loanRepository = new LoanRepository(db);
+
+        var loanService = new LoanService(
+            loanRepository,
+            bookRepository,
+            memberRepository);
+
+        var loanMenu = new LoanMenu(loanService);
+
+        var mainMenu = new MainMenu(
+            bookMenu,
+            memberMenu,
+            loanMenu);
 
         await mainMenu.RunAsync();
     }
