@@ -18,15 +18,19 @@ internal class Program
 
         await using var db = new AppDbContext(options);
 
-        // Connect the repository to EF Core.
+        // Book management dependencies
         var bookRepository = new BookRepository(db);
-
-        // Connect the service to the repository.
         var bookService = new BookService(bookRepository);
-
-        // Launch the book management menu.
         var bookMenu = new BookMenu(bookService);
 
-        await bookMenu.RunAsync();
+        // Member management dependencies
+        var memberRepository = new MemberRepository(db);
+        var memberService = new MemberService(memberRepository);
+        var memberMenu = new MemberMenu(memberService);
+
+        // Application main menu
+        var mainMenu = new MainMenu(bookMenu, memberMenu);
+
+        await mainMenu.RunAsync();
     }
 }
