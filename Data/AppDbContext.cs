@@ -22,6 +22,7 @@ public class AppDbContext : DbContext
     public DbSet<Book> Books => Set<Book>();
     public DbSet<Member> Members => Set<Member>();
     public DbSet<Loan> Loans => Set<Loan>();
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -93,6 +94,28 @@ public class AppDbContext : DbContext
                 .WithMany(m => m.Loans)
                 .HasForeignKey(l => l.MemberId)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+        modelBuilder.Entity<AuditLog>(entity =>
+        {
+            entity.HasKey(a => a.AuditLogId);
+
+            entity.Property(a => a.Action)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(a => a.EntityName)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(a => a.Description)
+                .IsRequired()
+                .HasMaxLength(1000);
+
+            entity.Property(a => a.PerformedBy)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.HasIndex(a => a.CreatedAt);
         });
     }
 }
